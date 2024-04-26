@@ -32,13 +32,14 @@ def change_resolution(input_path, output_path, resolution='640x480'):
     )
     return output_video_buffer.getvalue()
 
-def change_aspect_ratio(input_video_bytes, aspect_ratio='16:9'):
+def change_aspect_ratio(input_path, output_path, aspect_ratio='16:9'):
     output_video_buffer = io.BytesIO()
     (
         ffmpeg
-        .input('pipe:', f='mp4', r=30)
-        .output('pipe:', f='mp4', vf='setsar='+aspect_ratio)
-        .run(input=input_video_bytes)
+        .input(input_path)
+        .output(output_path, vf='setdar='+aspect_ratio)
+        .overwrite_output()
+        .run()
     )
     return output_video_buffer.getvalue()
 
@@ -54,7 +55,7 @@ def operate(parameters, file, file_path="inputServer.mp4", output_file_name="out
     #change aspect ratio
     elif(parameters["operation"] == 3):
         print("changing aspect ratio...")
-        return change_aspect_ratio(file)
+        return change_aspect_ratio(file_path, output_file_name)
 
 def start_server():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
