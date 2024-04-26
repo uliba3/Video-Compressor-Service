@@ -21,13 +21,14 @@ def compress_video(input_path, output_path, crf=23):
         print(f"Error during compression: {e.stderr}")
 
 
-def change_resolution(input_video_bytes, resolution='640x480'):
+def change_resolution(input_path, output_path, resolution='640x480'):
     output_video_buffer = io.BytesIO()
     (
         ffmpeg
-        .input('pipe:', f='mp4', r=30)
-        .output('pipe:', f='mp4', vf='scale='+resolution)
-        .run(input=input_video_bytes)
+        .input(input_path)
+        .output(output_path, vf='scale=480:320')
+        .overwrite_output()
+        .run()
     )
     return output_video_buffer.getvalue()
 
@@ -49,7 +50,7 @@ def operate(parameters, file, file_path="inputServer.mp4", output_file_name="out
     #change resolution
     elif(parameters["operation"] == 2):
         print("changing resolution...")
-        return change_resolution(file)
+        change_resolution(file_path, output_file_name)
     #change aspect ratio
     elif(parameters["operation"] == 3):
         print("changing aspect ratio...")

@@ -16,7 +16,7 @@ def send_file():
         file_path = "test.mp4"
         parameters = ffmpeg.probe(file_path)
         print("parameters:", parameters)
-        parameters["operation"] = 1
+        parameters["operation"] = 2
 
         #send data size
         parameters_size = len(json.dumps(parameters).encode())
